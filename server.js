@@ -1,13 +1,12 @@
 const express = require('express');
 const path = require('path');
-// const { clog } = require('./middleware/clog');
 const api = require('./routes/index.js');
+const fs = require('fs');
+
 
 const PORT = process.env.PORT || 3001;
 
 const app = express();
-
-// app.use(clog);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -20,10 +19,54 @@ app.get('/', (req, res) =>
   res.sendFile(path.join(__dirname, '/public/index.html'))
 );
 
-// GET Route for feedback page
-app.get('/feedback', (req, res) =>
-  res.sendFile(path.join(__dirname, '/public/pages/feedback.html'))
+// GET Route for notes page
+app.get('/api/notes', (req, res) =>
+  res.sendFile(path.join(__dirname, '/public/notes.html'))
 );
+
+// POST request to add a note
+app.post('/api/notes', (req, res) => {
+    console.info(`${req.method} request received to add a note`);
+  
+    const { title, text} = req.body;
+  
+    if (title && text ) {
+      const newNote = {
+        title,
+        text,
+        note_id: uuid(),
+      };
+  
+      fs.readFile('./db/db.json', 'utf8', (err, data) => {
+        if (err) {
+          console.error(err);
+        } else {
+          const parsedNotes = JSON.parse(data);
+  
+          parsedNotes.push(newNote);
+  
+          fs.writeFile(
+            './db/db.json',
+            JSON.stringify(parsedNotes, null, 4),
+            (writeErr) =>
+              writeErr
+                ? console.error(writeErr)
+                : console.info('Successfully updated notes!')
+          );
+        }
+      });
+  
+      const response = {
+        status: 'success',
+        body: newNote,
+      };
+  
+      console.log(response);
+      res.status(201).json(response);
+    } else {
+      res.status(500).json('Error in posting review');
+    }
+  });
 
 // Wildcard route to direct users to a 404 page
 app.get('*', (req, res) =>
