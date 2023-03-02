@@ -1,9 +1,10 @@
-// const express = require('express');
+const express = require('express');
 
-// const notesRouter = require('./notes');
+const { router } = require('..');
+const notesRouter = require('./notesRoutes');
 
-// const app = express();
+const app = express();
 
-// app.use('/notes', notesRouter);
+app.use('/notes', notesRouter);
 
-// module.exports = app;
+module.exports = app;

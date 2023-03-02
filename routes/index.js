@@ -1,12 +1,12 @@
 const express = require('express');
 
 // const homeRoutes = require('./home-route.js');
-// const notesRouter = require('./notes');
+const apiRoutes = require('./api');
 
 const app = express();
 
 // router.use('/', homeRoutes);
-// app.use('/notes', notesRouter);
+app.use('/api', apiRoutes);
 
 module.exports = app;
 
