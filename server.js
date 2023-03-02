@@ -16,13 +16,30 @@ app.use(express.static('public'));
 
 // GET Route for homepage
 app.get('/', (req, res) =>
-  res.sendFile(path.join(__dirname, '/public/index.html'))
+  res.sendFile(path.join(__dirname, 'public/index.html'))
 );
 
 // GET Route for notes page
-app.get('/api/notes', (req, res) =>
+app.get('/notes', (req, res) =>
   res.sendFile(path.join(__dirname, '/public/notes.html'))
 );
+
+// GET Route for db.json to return saved notes as JSON
+// app.get('/api/notes', (req, res) =>
+//   res.sendFile(path.join(__dirname, '/public/notes.html'))
+// );
+app.get('/api/notes', (req, res) => {
+    // Log our request to the terminal
+    console.info(`${req.method} request received to get reviews`);
+    fs.readFile('./db/db.json', 'utf8', (err, data) => {
+        if (err) {
+          console.error(err);
+        
+        }
+      });
+    // Sending all notes to the client
+    return res.status(200).json(notes);
+  });
 
 // POST request to add a note
 app.post('/api/notes', (req, res) => {
@@ -70,7 +87,7 @@ app.post('/api/notes', (req, res) => {
 
 // Wildcard route to direct users to a 404 page
 app.get('*', (req, res) =>
-  res.sendFile(path.join(__dirname, 'public/pages/404.html'))
+  res.sendFile(path.join(__dirname, 'public/index.html'))
 );
 
 app.listen(PORT, () =>
