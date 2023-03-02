@@ -1,14 +1,15 @@
 const fb = require('express').Router();
 const { v4: uuidv4 } = require('uuid');
-const { readAndAppend, readFromFile } = require('../../helpers/fsUtils');
+const {
+  readFromFile,
+  readAndAppend,
+  writeToFile,
+} = require('../../helpers/fsUtils');
 
-// GET Route for retrieving all the notes
-fb.get('/api/notes', (req, res) =>
-  readFromFile('./db.json').then((data) => res.json(JSON.parse(data)))
-);
+
 
 // POST Route for submitting feedback
-fb.post('/', (req, res) => {
+fb.post('/notes', (req, res) => {
   // Destructuring assignment for the items in req.body
   const { title, text } = req.body;
 
@@ -21,7 +22,7 @@ fb.post('/', (req, res) => {
       note_id: uuidv4(),
     };
 
-    readAndAppend(newNote, '../db.json');
+    readAndAppend(newNote, '../db/db.json');
 
     const response = {
       status: 'success',
