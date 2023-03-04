@@ -14,25 +14,15 @@ app.use(api);
 
 app.use(express.static('public'));
 
-// GET Route for homepage
 app.get('/', (req, res) =>
   res.sendFile(path.join(__dirname, 'public/index.html'))
 );
 
-// GET Route for notes page
 app.get('/notes', (req, res) =>
   res.sendFile(path.join(__dirname, '/public/notes.html'))
 );
 
-// GET Route for db.json to return saved notes as JSON
-// app.get('/api/notes', (req, res) =>
-//   res.sendFile(path.join(__dirname, '/public/notes.html'))
-// );
-// app.get('/api/notes', (req, res) =>
-//   readFromFile('./db/db.json').then((data) => res.json(JSON.parse(data)))
-// );
 
-// Wildcard route to direct users to a 404 page
 app.get('*', (req, res) =>
   res.sendFile(path.join(__dirname, 'public/index.html'))
 );
